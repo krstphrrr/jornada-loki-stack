@@ -38,6 +38,9 @@ services:
       - "80:80"
     volumes:
        - ./conf.d:/etc/nginx/conf.d:ro
+    networks:
+      - loki-net
+
 
 networks:
   loki-net:
