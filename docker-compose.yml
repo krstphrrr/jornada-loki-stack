@@ -3,8 +3,8 @@ version: '3'
 services:
   loki:
     image: grafana/loki:latest
-    ports:
-      - "3100:3100"
+    # ports:
+    #   - "3100:3100"
     # command: -config.file=/etc/loki/loki-config.yaml
     # volumes:
     #   # Loki configuration
@@ -23,14 +23,21 @@ services:
 
   grafana:
     image: grafana/grafana:latest
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
     networks:
       - loki-net
     depends_on:
       - loki
+
+  nginx:
+    image: nginx:1.27.0
+    ports:
+      - "80:80"
+    volumes:
+       - ./conf.d:/etc/nginx/conf.d:ro
 
 networks:
   loki-net:
