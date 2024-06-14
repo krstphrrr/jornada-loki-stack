@@ -35,7 +35,7 @@ services:
   nginx:
     image: nginx:1.27.0
     ports:
-      - "80:80"
+      - "8888:80"
     volumes:
        - ./conf.d:/etc/nginx/conf.d:ro
     networks:
