@@ -19,3 +19,9 @@ scrape_configs:
     static_configs:
       - targets:
           - '192.168.177.154:5018'
+
+  - job_name: 'postgres_host'
+    scrape_interval: 10s
+    static_configs:
+      - targets:
+          - '192.168.177.155:9100'
