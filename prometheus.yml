@@ -1,0 +1,21 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'uptime_monitor'
+    scrape_interval: 10s
+    static_configs:
+      - targets:
+          - '192.168.177.31:8080'
+
+  - job_name: 'go_api'
+    scrape_interval: 10s
+    static_configs:
+      - targets:
+          - '192.168.177.179:8080'
+
+  - job_name: 'fastify_api'
+    scrape_interval: 10s
+    static_configs:
+      - targets:
+          - '192.168.177.154:5018'

@@ -5,21 +5,28 @@ services:
     image: grafana/loki:latest
     ports:
       - "3100:3100"
-    # command: -config.file=/etc/loki/loki-config.yaml
-    # volumes:
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
     #   # Loki configuration
-    #   - ./loki-config.yaml:/etc/loki/loki-config.yaml
+      - ./loki-config.yml:/etc/loki/local-config.yaml
+      - loki-index:/loki/index
+      - loki-chunks:/loki/chunks
+      - loki-dbcache:/loki/boltdb-cache
+      #- /home/elrey/jornada-loki-stack/loki/index:/loki/index
+      #- /home/elrey/jornada-loki-stack/loki/chunks:/loki/chunks
+      #- /home/elrey/jornada-loki-stack/loki/boltdb-cache:/loki/boltdb-cache
+
     networks:
       - loki-net
 
-  promtail:
-    image: grafana/promtail:latest
-    volumes:
-      - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
-    networks:
-      - loki-net
-    depends_on:
-      - loki
+  #promtail:
+  #  image: grafana/promtail:latest
+  #  volumes:
+  #    - ./promtail-config.yaml:/etc/promtail/promtail-config.yaml
+  #  networks:
+  #    - loki-net
+  #  depends_on:
+  #    - loki
 
   grafana:
     image: grafana/grafana:latest
@@ -27,10 +34,27 @@ services:
       - "3000:3000"
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_SECURITY_ADMIN_USER=admin
+    volumes:
+      - grafana-storage:/var/lib/grafana
     networks:
       - loki-net
     depends_on:
       - loki
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - loki-net
+
+volumes:
+  grafana-storage:
+  loki-index:
+  loki-chunks:
+  loki-dbcache:
 
   # nginx:
   #   image: nginx:1.27.0
